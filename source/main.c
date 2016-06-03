@@ -1,9 +1,4 @@
-#include <stm32f10x.h>
-#include <GPIO_STM32F10x.h>
-#include <stm32f10x_rcc.h>
 #include <stm32f10x_conf.h>
-#include <stm32f10x_gpio.h>
-#include <stm32f10x_rtc.h>
 
 void Delay_us(uint32_t us)
 {
