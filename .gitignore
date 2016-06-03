@@ -81,3 +81,23 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Keil
+# =========================
+
+*.o
+*.d
+*.crf
+*.htm
+*.dep
+*.map
+*.bak
+*.axf
+*.lnp
+*.lst
+*.ini
+*.iex
+JLinkLog.txt
+RTE/
+*.sct
+*.uvproj
