@@ -101,3 +101,6 @@ JLinkLog.txt
 RTE/
 *.sct
 *.uvproj
+*.uvoptx
+*.uvguix.*
+*.uvprojx
