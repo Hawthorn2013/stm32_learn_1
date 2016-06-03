@@ -1,10 +1,22 @@
 #include <stm32f10x_conf.h>
+#include <stdio.h>
+#include <string.h>
 
 void Delay_us(uint32_t us)
 {
     volatile uint16_t us_i = us;
     while(us_i--)
         ;
+}
+
+void Send_To_Console(const char *data, uint32_t len)
+{
+    uint32_t i = 0;
+    for (i = 0; i < len; i++)
+    {
+        USART_SendData(USART1, data[i]);
+        while(USART_GetFlagStatus(USART1,USART_FLAG_TC) != SET);//等待发送结束
+    }
 }
 
 int main(void)
@@ -32,8 +44,9 @@ int main(void)
     USART_Cmd(USART1, ENABLE);                    //使能串口
     while(1)
     {
+        char dst[50];
+        sprintf(dst, "%d + %f = %f\r\n", i, 7.4, i + 7.4);
+        Send_To_Console(dst, strlen(dst));
         i++;
-        USART_SendData(USART1, 0xAA);
-        while(USART_GetFlagStatus(USART1,USART_FLAG_TC) != SET);//等待发送结束
     }
 }
