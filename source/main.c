@@ -2,44 +2,41 @@
 
 void Delay_us(uint32_t us)
 {
-	volatile uint16_t us_i = us;
-	while(us_i--)
-		;
+    volatile uint16_t us_i = us;
+    while(us_i--)
+        ;
 }
 
 int main(void)
 {
-	volatile int i = 0;
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-  GPIO_InitStructure.GPIO_Pin = 0XFFFF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-	while(1)
-  {
-		GPIO_Write(GPIOA, 0xFFFF);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		GPIO_Write(GPIOA, 0);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		Delay_us(0xffffffff);
-		i++;
-	}
+    volatile int i = 0;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+    USART_DeInit(USART2);
+    //USART2_TX   PA.2
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    //USART2_RX   PA.3
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    //USART 初始化设置
+    USART_InitStructure.USART_BaudRate = 38400;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    USART_Init(USART2, &USART_InitStructure);
+    USART_Cmd(USART2, ENABLE);                    //使能串口
+    while(1)
+    {
+        i++;
+        USART_SendData(USART2, 0xAA);
+        while(USART_GetFlagStatus(USART2,USART_FLAG_TC) != SET);//等待发送结束
+    }
 }
