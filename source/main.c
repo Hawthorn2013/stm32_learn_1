@@ -70,6 +70,11 @@ int main(void)
     SPI_InitStructure.SPI_CRCPolynomial =7;        //CRC7
     SPI_Init(SPI2,&SPI_InitStructure);
     SPI_Cmd(SPI2, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 |GPIO_Pin_11| GPIO_Pin_13;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  //复用推挽输出
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
     while(1)
     {
         char dst[50];
@@ -77,5 +82,13 @@ int main(void)
         Send_To_Console(dst, strlen(dst));
         i++;
         OLED_SendData(0x0a);
+        GPIO_WriteBit(GPIOD, GPIO_Pin_9, Bit_SET);
+        GPIO_WriteBit(GPIOD, GPIO_Pin_11, Bit_SET);
+        GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_SET);
+        Delay_us(10000);
+        GPIO_WriteBit(GPIOD, GPIO_Pin_9, Bit_RESET);
+        GPIO_WriteBit(GPIOD, GPIO_Pin_11, Bit_RESET);
+        GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);
+        Delay_us(10000);
     }
 }
