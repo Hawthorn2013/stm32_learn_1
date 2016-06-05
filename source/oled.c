@@ -167,19 +167,26 @@ const static uint8_t Font_ascii_6x8[][6] =
     { 0x00, 0x44, 0x28, 0x10, 0x28, 0x44 },   // x
     { 0x00, 0x1C, 0xA0, 0xA0, 0xA0, 0x7C },   // y
     { 0x00, 0x44, 0x64, 0x54, 0x4C, 0x44 },   // z
-    { 0x14, 0x14, 0x14, 0x14, 0x14, 0x14 }    // horiz lines
+    { 0x14, 0x14, 0x14, 0x14, 0x14, 0x14 },   // horiz lines
+    { 0x00, 0x7e, 0x7e, 0x7e, 0x7e, 0x00 }
 };
 
 void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
 {
     uint16_t i = 0, j = 0;
+    uint8_t ch;
     
     OLED_SetPos(x, y);
     while(str[i])
     {
+        ch = str[i];
+        if(ch < ' ' || ch > 'z')
+        {
+            ch = (uint8_t)(sizeof(Font_ascii_6x8) / 6) + (uint8_t)' ' - (uint8_t)1;
+        }
         for(j = 0; j < 6; j++)
         {
-            OLED_SendData(Font_ascii_6x8[str[i] - ' '][j]);
+            OLED_SendData(Font_ascii_6x8[ch - ' '][j]);
         }
         x += 6;
         i++;
