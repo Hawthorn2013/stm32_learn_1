@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#define OLED_SEG (128)
+#define OLED_PAGE (8)
+#define OLED_COM (64)
+
 //提供的接口
 void OLED_Init(void);
 void OLED_Fill(uint8_t data);

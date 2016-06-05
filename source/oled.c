@@ -180,9 +180,17 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
     while(str[i])
     {
         ch = str[i];
+        //字符不在字库中，使用默认字符实心方形
         if(ch < ' ' || ch > 'z')
         {
             ch = (uint8_t)(sizeof(Font_ascii_6x8) / 6) + (uint8_t)' ' - (uint8_t)1;
+        }
+        //行末空间不足，自动换行
+        if(OLED_SEG - x < 6)
+        {
+            x = 0;
+            y++;
+            OLED_SetPos(x, y);
         }
         for(j = 0; j < 6; j++)
         {
