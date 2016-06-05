@@ -188,6 +188,12 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
             OLED_SetPos(x, y);
             continue;
         }
+        else if(ch == '\r')
+        {
+            x = 0;
+            OLED_SetPos(x, y);
+            continue;
+        }
         else if(ch < ' ' || ch > 'z')
         {
             ch = (uint8_t)(sizeof(Font_ascii_6x8) / 6) + (uint8_t)' ' - (uint8_t)1;
