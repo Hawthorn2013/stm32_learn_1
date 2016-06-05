@@ -1,6 +1,7 @@
 #include <stm32f10x_conf.h>
 #include <stdio.h>
 #include <string.h>
+#include "oled.h"
 
 void Delay_us(uint32_t us)
 {
@@ -99,12 +100,13 @@ int main(void)
     GPIO_Init(GPIOD, &GPIO_InitStructure);
     OLED_Reset();
     OLED_Init();
+    OLED_Fill(0x00);
     while(1)
     {
         char dst[50];
         sprintf(dst, "%d + %f = %f\r\n", i, 7.4, i + 7.4);
         Send_To_Console(dst, strlen(dst));
         i++;
-        OLED_Fill(0xff);
+        OLED_Print6x8Str(0, 0, (const uint8_t *)"hehehe!");
     }
 }
