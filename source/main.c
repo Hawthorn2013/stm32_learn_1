@@ -19,6 +19,16 @@ void Send_To_Console(const char *data, uint32_t len)
     }
 }
 
+void OLED_Reset()
+{
+    
+}
+
+void OLED_SendCmd(uint8_t cmd)
+{
+    
+}
+
 void OLED_SendData(uint8_t data)
 {
     while((SPI2->SR & SPI_I2S_FLAG_TXE) == RESET);  //等待发送区空  
