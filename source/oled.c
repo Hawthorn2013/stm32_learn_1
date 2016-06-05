@@ -6,6 +6,10 @@ extern void OLED_Init(void);
 extern void OLED_SendCmd(uint8_t cmd);
 extern void OLED_SendData(uint8_t data);
 
+#if OLED_CONF_USE_MEMORY
+static uint8_t OLED_memory[OLED_PAGE][OLED_SEG];
+#endif
+
 //内部使用的函数
 static void OLED_SetPos(uint8_t x, uint8_t y);
 
@@ -212,6 +216,18 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
         x += 6;
     }
 }
+
+#if OLED_CONF_USE_MEMORY
+void OLED_UpdateMemory(void)
+{
+    uint16_t i;
+    OLED_SetPos(0, 0);
+    for(i = 0; i < OLED_SEG * OLED_PAGE; i++)
+    {
+        OLED_SendData(((const uint8_t *)OLED_memory)[i]);
+    }
+}
+#endif
 
 static void OLED_SetPos(uint8_t x, uint8_t y)
 {
