@@ -21,20 +21,32 @@ void Send_To_Console(const char *data, uint32_t len)
 
 void OLED_Reset()
 {
-    
+    GPIO_WriteBit(GPIOD, GPIO_Pin_9, Bit_RESET);
+    Delay_us(1000);
+    GPIO_WriteBit(GPIOD, GPIO_Pin_9, Bit_SET);
+    Delay_us(1000);
 }
 
 void OLED_SendCmd(uint8_t cmd)
 {
-    
+    GPIO_WriteBit(GPIOD, GPIO_Pin_11, Bit_RESET);       //指定发送cmd
+    GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);       //建立片选
+    while((SPI2->SR & SPI_I2S_FLAG_TXE) == RESET);
+    SPI2->DR = cmd;
+    while((SPI2->SR & SPI_I2S_FLAG_RXNE) == RESET);
+    (void)(SPI2->DR);  
+    GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_SET);         //清除片选
 }
 
 void OLED_SendData(uint8_t data)
 {
-    while((SPI2->SR & SPI_I2S_FLAG_TXE) == RESET);  //等待发送区空  
-    SPI2->DR = data;   //发送一个byte  
-    while((SPI2->SR & SPI_I2S_FLAG_RXNE) == RESET);//等待接收完一个byte 
-    (void)(SPI2->DR);                //返回收到的数据   
+    GPIO_WriteBit(GPIOD, GPIO_Pin_11, Bit_SET);         //指定发送data
+    GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);
+    while((SPI2->SR & SPI_I2S_FLAG_TXE) == RESET);      //等待发送区空  
+    SPI2->DR = data;                                    //发送一个byte  
+    while((SPI2->SR & SPI_I2S_FLAG_RXNE) == RESET);     //等待接收完一个byte 
+    (void)(SPI2->DR);                                   //返回收到的数据   
+    GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_SET);
 }
 
 int main(void)
@@ -91,14 +103,11 @@ int main(void)
         sprintf(dst, "%d + %f = %f\r\n", i, 7.4, i + 7.4);
         Send_To_Console(dst, strlen(dst));
         i++;
-        OLED_SendData(0x0a);
-        GPIO_WriteBit(GPIOD, GPIO_Pin_9, Bit_SET);
-        GPIO_WriteBit(GPIOD, GPIO_Pin_11, Bit_SET);
-        GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_SET);
+        OLED_Reset();
         Delay_us(10000);
-        GPIO_WriteBit(GPIOD, GPIO_Pin_9, Bit_RESET);
-        GPIO_WriteBit(GPIOD, GPIO_Pin_11, Bit_RESET);
-        GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);
+        //OLED_SendCmd(0x0a);
+        //Delay_us(10000);
+        OLED_SendData(0x9A);
         Delay_us(10000);
     }
 }
