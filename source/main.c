@@ -107,6 +107,6 @@ int main(void)
         sprintf(dst, "%d + %f = %f\r\n", i, 7.4, i + 7.4);
         Send_To_Console(dst, strlen(dst));
         i++;
-        OLED_Print6x8Str(0, 0, (const uint8_t *)"11122233\n44455566\n77788899\n000");
+        OLED_Print6x8Str(0, 0, (const uint8_t *)"11122233\n44\r55566\n77788\r99\n000");
     }
 }

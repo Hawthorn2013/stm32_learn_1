@@ -177,11 +177,18 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
     uint8_t ch;
     
     OLED_SetPos(x, y);
-    while(str[i])
+    for(ch = str[i]; str[i]; i++)
     {
         ch = str[i];
-        //字符不在字库中，使用默认字符实心方形
-        if(ch < ' ' || ch > 'z')
+        //字符不在字库中
+        if(ch == '\n')
+        {
+            x = 0;
+            y++;
+            OLED_SetPos(x, y);
+            continue;
+        }
+        else if(ch < ' ' || ch > 'z')
         {
             ch = (uint8_t)(sizeof(Font_ascii_6x8) / 6) + (uint8_t)' ' - (uint8_t)1;
         }
@@ -197,7 +204,6 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
             OLED_SendData(Font_ascii_6x8[ch - ' '][j]);
         }
         x += 6;
-        i++;
     }
 }
 
