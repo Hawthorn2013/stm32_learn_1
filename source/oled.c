@@ -11,7 +11,9 @@ static uint8_t OLED_memory[OLED_PAGE][OLED_SEG];
 #endif
 
 //内部使用的函数
+static uint16_t Pos_X, Pos_Y;
 static void OLED_SetPos(uint8_t x, uint8_t y);
+static void OLED_WriteGraphData(uint8_t data);
 
 void OLED_Init(void)
 {
@@ -180,22 +182,30 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
     uint16_t i = 0, j = 0;
     uint8_t ch;
     
-    OLED_SetPos(x, y);
+    Pos_X = x;
+    Pos_Y = y;
+    #if !OLED_CONF_USE_MEMORY
+    OLED_SetPos(Pos_X, Pos_Y);
+    #endif
     for(ch = str[i]; str[i]; i++)
     {
         ch = str[i];
         //字符不在字库中
         if(ch == '\n')
         {
-            x = 0;
-            y++;
-            OLED_SetPos(x, y);
+            Pos_X = 0;
+            Pos_Y++;
+            #if !OLED_CONF_USE_MEMORY
+            OLED_SetPos(Pos_X, Pos_Y);
+            #endif
             continue;
         }
         else if(ch == '\r')
         {
-            x = 0;
-            OLED_SetPos(x, y);
+            Pos_X = 0;
+            #if !OLED_CONF_USE_MEMORY
+            OLED_SetPos(Pos_X, Pos_Y);
+            #endif
             continue;
         }
         else if(ch < ' ' || ch > 'z')
@@ -203,17 +213,19 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
             ch = (uint8_t)(sizeof(Font_ascii_6x8) / 6) + (uint8_t)' ' - (uint8_t)1;
         }
         //行末空间不足，自动换行
-        if(OLED_SEG - x < 6)
+        if(OLED_SEG - Pos_X < 6)
         {
-            x = 0;
-            y++;
-            OLED_SetPos(x, y);
+            Pos_X = 0;
+            Pos_Y++;
+            #if !OLED_CONF_USE_MEMORY
+            OLED_SetPos(Pos_X, Pos_Y);
+            #endif
         }
         for(j = 0; j < 6; j++)
         {
-            OLED_SendData(Font_ascii_6x8[ch - ' '][j]);
+            OLED_WriteGraphData(Font_ascii_6x8[ch - ' '][j]);
+            Pos_X++;
         }
-        x += 6;
     }
 }
 
@@ -234,4 +246,13 @@ static void OLED_SetPos(uint8_t x, uint8_t y)
 	OLED_SendCmd(0xb0 + y);
 	OLED_SendCmd(((x & 0xf0) >> 4) | 0x10);
 	OLED_SendCmd((x & 0x0f) | 0x00);
+}
+
+static void OLED_WriteGraphData(uint8_t data)
+{
+    #if OLED_CONF_USE_MEMORY
+    OLED_memory[Pos_Y][Pos_X] = data;
+    #else
+    OLED_SendData(data);
+    #endif
 }
