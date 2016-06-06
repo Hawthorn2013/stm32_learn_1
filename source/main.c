@@ -108,6 +108,6 @@ int main(void)
         Send_To_Console(dst, strlen(dst));
         i++;
         OLED_Print6x8Str(0, 0, (const uint8_t *)"11122233\r\n44\r55566\n77788\r99\n000");
-        OLED_UpdateMemory();
+        //OLED_UpdateMemory();
     }
 }

@@ -5,7 +5,7 @@
 
 //编译选项
 //使用显存
-#define OLED_CONF_USE_MEMORY (1)
+#define OLED_CONF_USE_MEMORY (0)
 
 #define OLED_SEG (128)
 #define OLED_PAGE (8)
