@@ -210,7 +210,6 @@ void OLED_Print6x8Str(const uint8_t str[])
         {
             OLED_WriteGraphData(Font_ascii_6x8[ch - ' '][j]);
             OLED_SetPos(++x, y);
-            Pos_X++;
         }
     }
 }
