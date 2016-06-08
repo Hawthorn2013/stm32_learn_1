@@ -21,5 +21,7 @@ int main(void)
         //OLED_SetPos(0, 0);
         OLED_Print6x8Str((const uint8_t *)"1111111111111111111111111");
         //OLED_UpdateMemory();
+        USART_SendData(USART2, 0x15);
+        while(USART_GetFlagStatus(USART2, USART_FLAG_TC) != SET);//等待发送结束
     }
 }
