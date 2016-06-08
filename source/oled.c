@@ -13,7 +13,6 @@ static uint8_t OLED_memory[OLED_PAGE][OLED_SEG];
 //内部使用的函数
 static uint16_t Pos_X, Pos_Y;
 static void OLED_SendCmd_SetPos(uint8_t x, uint8_t y);
-static void OLED_SetPos(uint8_t x, uint8_t y);
 static void OLED_WriteGraphData(uint8_t data);
 
 void OLED_Init(void)
@@ -178,12 +177,12 @@ const static uint8_t Font_ascii_6x8[][6] =
     { 0x00, 0x7e, 0x7e, 0x7e, 0x7e, 0x00 }
 };
 
-void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
+void OLED_Print6x8Str(const uint8_t str[])
 {
     uint16_t i = 0, j = 0;
     uint8_t ch;
+    uint16_t x = Pos_X, y = Pos_Y;
     
-    OLED_SetPos(x, y);
     for(ch = str[i]; str[i]; i++)
     {
         ch = str[i];
@@ -216,6 +215,15 @@ void OLED_Print6x8Str(uint8_t x, uint8_t y, const uint8_t str[])
     }
 }
 
+void OLED_SetPos(uint8_t x, uint8_t y)
+{
+    Pos_X = x;
+    Pos_Y = y;
+    #if !OLED_CONF_USE_MEMORY
+    OLED_SendCmd_SetPos(Pos_X, Pos_Y);
+    #endif
+}
+
 #if OLED_CONF_USE_MEMORY
 void OLED_UpdateMemory(void)
 {
@@ -227,15 +235,6 @@ void OLED_UpdateMemory(void)
     }
 }
 #endif
-
-static void OLED_SetPos(uint8_t x, uint8_t y)
-{
-    Pos_X = x;
-    Pos_Y = y;
-    #if !OLED_CONF_USE_MEMORY
-    OLED_SendCmd_SetPos(Pos_X, Pos_Y);
-    #endif
-}
 
 static void OLED_SendCmd_SetPos(uint8_t x, uint8_t y)
 {
