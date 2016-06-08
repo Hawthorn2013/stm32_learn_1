@@ -217,8 +217,8 @@ void OLED_Print6x8Str(const uint8_t str[])
 
 void OLED_SetPos(uint8_t x, uint8_t y)
 {
-    Pos_X = x;
-    Pos_Y = y;
+    Pos_X = x % OLED_SEG;
+    Pos_Y = y % OLED_PAGE;
     #if !OLED_CONF_USE_MEMORY
     OLED_SendCmd_SetPos(Pos_X, Pos_Y);
     #endif
