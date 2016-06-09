@@ -36,6 +36,8 @@
 /* USER CODE BEGIN Includes */
 #include "bsp.h"
 #include "oled.h"
+#include "MQTTPacket.h"
+#include "MQTTConnect.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -101,9 +103,27 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+    int rc = 0;
+    uint8_t buf[200];
+    MQTTString topicString = MQTTString_initializer;
+    char* payload = "mypayload";
+    int payloadlen = strlen(payload);int buflen = sizeof(buf);
+    int len = 0;
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+    data.clientID.cstring = "me";
+    data.keepAliveInterval = 20;
+    data.cleansession = 1;
+    len = MQTTSerialize_connect(buf, buflen, &data); /* 1 */
+
+    topicString.cstring = "mytopic";
+    len += MQTTSerialize_publish(buf + len, buflen - len, 0, 0, 0, 0, topicString, (uint8_t *)payload, payloadlen); /* 2 */
+
+    len += MQTTSerialize_disconnect(buf + len, buflen - len); /* 3 */
+    rc = transport_sendPacketBuffer(0, buf, len);
+    (void)rc;
   }
   /* USER CODE END 3 */
 
