@@ -2,6 +2,7 @@
 
 volatile uint8_t USART1_RX_data;
 volatile uint8_t USART2_RX_data;
+BSP_FIFO BSP_FIFO_USART2;
 
 void Delay_us(uint32_t us)
 {
@@ -82,4 +83,70 @@ int transport_close(int sock)
 {
     //使用串口TCP透传，关闭不受控制。
     return 0;
+}
+
+void BSP_InitFIFO(BSP_FIFO *fifo)
+{
+    fifo->head = 0;
+    fifo->tail = 0;
+}
+
+uint32_t BSP_GetFIFOAvailableLen(BSP_FIFO *fifo)
+{
+    if (fifo->head >= fifo->tail)
+    {
+        return fifo->head - fifo->tail;
+    }
+    else
+    {
+        return (fifo->head + BSP_USART_FIFO_LEN) - fifo->tail;
+    }
+}
+
+uint32_t BSP_PopFIFOByte(BSP_FIFO *fifo, uint8_t *data)
+{
+    if (BSP_GetFIFOAvailableLen(fifo))
+    {
+        *data = (fifo->data)[fifo->tail];
+        (fifo->tail)++;
+        fifo->tail %= BSP_USART_FIFO_LEN;
+        return 1;
+    }
+    return 0;
+}
+
+uint32_t BSP_PopFIFO(BSP_FIFO *fifo, uint8_t *buff, uint32_t len)
+{
+    uint32_t i;
+    
+    for (i = 0; i < len; i++)
+    {
+        if (!BSP_PopFIFOByte(fifo, buff + i))
+        {
+            break;
+        }
+    }
+    return i;
+}
+
+void BSP_PushFIFOByte(BSP_FIFO *fifo, uint8_t data)
+{
+    (fifo->data)[fifo->head] = data;
+    fifo->head++;
+    fifo->head %= BSP_USART_FIFO_LEN;
+    //溢出发生时覆盖最老的数据
+    if (fifo->head == fifo->tail)
+    {
+        fifo->tail++;
+    }
+}
+
+void BSP_PushFIFO(BSP_FIFO *fifo, uint8_t *buff, uint32_t len)
+{
+    uint32_t i;
+    
+    for (i = 0; i < len; i++)
+    {
+        BSP_PushFIFOByte(fifo, buff[i]);
+    }
 }

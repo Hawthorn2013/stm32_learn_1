@@ -1,7 +1,17 @@
 #ifndef _BSP_H_
 #define _BSP_H_
 
+#include "string.h"
 #include "stm32f1xx_hal.h"
+
+#define BSP_USART_FIFO_LEN (512)
+
+typedef struct
+{
+    uint32_t head;
+    uint32_t tail;
+    uint8_t data[BSP_USART_FIFO_LEN];
+} BSP_FIFO;
 
 extern volatile uint8_t USART1_RX_data;
 extern volatile uint8_t USART2_RX_data;
@@ -20,5 +30,9 @@ int transport_getdata(unsigned char* buf, int count);
 int transport_getdatanb(void *sck, unsigned char* buf, int count);
 int transport_open(char* host, int port);
 int transport_close(int sock);
+void BSP_InitFIFO(BSP_FIFO *fifo);
+uint32_t BSP_GetFIFOAvailableLen(BSP_FIFO *fifo);
+uint32_t BSP_PopFIFO(BSP_FIFO *fifo, uint8_t *buff, uint32_t len);
+void BSP_PushFIFO(BSP_FIFO *fifo, uint8_t *buff, uint32_t len);
 
 #endif
