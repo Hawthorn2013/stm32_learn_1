@@ -31,7 +31,7 @@ void OLED_SendCmd(uint8_t cmd)
 {
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_RESET);       //指定发送cmd
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);       //建立片选
-    HAL_SPI_Transmit(&hspi2, &cmd, 8, 10);
+    HAL_SPI_Transmit(&hspi2, &cmd, 1, 10);
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);         //清除片选
 }
 
@@ -39,7 +39,7 @@ void OLED_SendData(uint8_t data)
 {
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_SET);         //指定发送data
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(&hspi2, &data, 8, 10);
+    HAL_SPI_Transmit(&hspi2, &data, 1, 10);
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
 }
 

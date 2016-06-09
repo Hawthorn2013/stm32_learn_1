@@ -35,6 +35,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "bsp.h"
+#include "oled.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -89,6 +90,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, (uint8_t *)&USART1_RX_data, 1);
   HAL_UART_Receive_IT(&huart2, (uint8_t *)&USART2_RX_data, 1);
+  OLED_Reset();
+  OLED_Init();
+  OLED_Fill(0x00);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,6 +104,7 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     //Send_To_Console(dst, sizeof(dst) - 1);
+    OLED_Print6x8Str("hehehe123\r\n");
   }
   /* USER CODE END 3 */
 
@@ -214,9 +219,21 @@ static void MX_USART2_UART_Init(void)
 static void MX_GPIO_Init(void)
 {
 
+  GPIO_InitTypeDef GPIO_InitStruct;
+
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_9|GPIO_PIN_11|GPIO_PIN_13, GPIO_PIN_SET);
+
+  /*Configure GPIO pins : PD9 PD11 PD13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_11|GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 }
 
