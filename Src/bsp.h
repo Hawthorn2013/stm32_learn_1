@@ -32,7 +32,9 @@ int transport_open(char* host, int port);
 int transport_close(int sock);
 void BSP_InitFIFO(BSP_FIFO *fifo);
 uint32_t BSP_GetFIFOAvailableLen(BSP_FIFO *fifo);
+uint32_t BSP_PopFIFOByte(BSP_FIFO *fifo, uint8_t *data);
 uint32_t BSP_PopFIFO(BSP_FIFO *fifo, uint8_t *buff, uint32_t len);
+void BSP_PushFIFOByte(BSP_FIFO *fifo, uint8_t data);
 void BSP_PushFIFO(BSP_FIFO *fifo, uint8_t *buff, uint32_t len);
 
 #endif

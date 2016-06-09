@@ -53,24 +53,32 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     }
     else if (huart == &huart2)
     {
-        HAL_UART_Transmit(huart, (uint8_t *)&USART2_RX_data, 1, 10);
+        BSP_PushFIFOByte(&BSP_FIFO_USART2, USART2_RX_data);
         HAL_UART_Receive_IT(&huart2, (uint8_t *)&USART2_RX_data, 1);
     }
 }
 
 int transport_sendPacketBuffer(int sock, unsigned char* buf, int buflen)
 {
-    return 0;
+    return HAL_UART_Transmit(&huart2, buf, buflen, 10);
 }
 
 int transport_getdata(unsigned char* buf, int count)
 {
-    return 0;
+    while (BSP_GetFIFOAvailableLen(&BSP_FIFO_USART2) <count)
+        ;
+    BSP_PopFIFO(&BSP_FIFO_USART2, buf, count);
+    return count;
 }
 
 int transport_getdatanb(void *sck, unsigned char* buf, int count)
 {
-    return 0;
+    if (BSP_GetFIFOAvailableLen(&BSP_FIFO_USART2) <count)
+    {
+        return 0;
+    }
+    BSP_PopFIFO(&BSP_FIFO_USART2, buf, count);
+    return count;
 }
 
 int transport_open(char* host, int port)

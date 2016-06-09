@@ -93,18 +93,17 @@ int main(void)
   OLED_Reset();
   OLED_Init();
   OLED_Fill(0x00);
+  OLED_Print6x8Str((const uint8_t *)"MQTT Start.");
+  HAL_UART_Receive_IT(&huart2, (uint8_t *)&USART2_RX_data, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      //char dst[] = "hehehe123\r\n";
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-    //Send_To_Console(dst, sizeof(dst) - 1);
-    //OLED_Print6x8Str("hehehe123\r\n");
   }
   /* USER CODE END 3 */
 
