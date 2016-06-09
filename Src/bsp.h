@@ -1,9 +1,12 @@
 #ifndef _BSP_H_
 #define _BSP_H_
 
-#include <stm32f10x_conf.h>
+#include "stm32f1xx_hal.h"
 
-void Init_STM32(void);
+extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
+extern SPI_HandleTypeDef hspi2;
+
 void Delay_us(uint32_t us);
 void Send_To_Console(const char *data, uint32_t len);
 void OLED_Reset(void);

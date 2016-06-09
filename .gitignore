@@ -104,3 +104,13 @@ RTE/
 *.uvoptx
 *.uvguix.*
 *.uvprojx
+
+# STM32CubeMX
+# =========================
+
+Drivers/
+Inc/
+MDK-ARM/
+Src/stm32f1xx*
+*.mxproject
+*.ioc
