@@ -87,18 +87,19 @@ int main(void)
   MX_SPI2_Init();
 
   /* USER CODE BEGIN 2 */
-
+  HAL_UART_Receive_IT(&huart1, (uint8_t *)&USART1_RX_data, 1);
+  HAL_UART_Receive_IT(&huart2, (uint8_t *)&USART2_RX_data, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      char dst[] = "hehehe123\r\n";
+      //char dst[] = "hehehe123\r\n";
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-    Send_To_Console(dst, sizeof(dst) - 1);
+    //Send_To_Console(dst, sizeof(dst) - 1);
   }
   /* USER CODE END 3 */
 

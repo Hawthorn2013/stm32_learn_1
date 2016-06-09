@@ -1,5 +1,6 @@
 #include "bsp.h"
 
+volatile uint8_t USART1_RX_data;
 volatile uint8_t USART2_RX_data;
 
 void Delay_us(uint32_t us)
@@ -44,5 +45,14 @@ void OLED_SendData(uint8_t data)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    HAL_UART_Receive_IT(&huart2, (uint8_t *)&USART2_RX_data, 8);
+    if (huart == &huart1)
+    {
+        HAL_UART_Transmit(huart, (uint8_t *)&USART1_RX_data, 1, 10);
+        HAL_UART_Receive_IT(&huart1, (uint8_t *)&USART1_RX_data, 1);
+    }
+    else if (huart == &huart2)
+    {
+        HAL_UART_Transmit(huart, (uint8_t *)&USART2_RX_data, 1, 10);
+        HAL_UART_Receive_IT(&huart2, (uint8_t *)&USART2_RX_data, 1);
+    }
 }

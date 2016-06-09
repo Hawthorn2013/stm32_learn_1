@@ -3,6 +3,9 @@
 
 #include "stm32f1xx_hal.h"
 
+extern volatile uint8_t USART1_RX_data;
+extern volatile uint8_t USART2_RX_data;
+
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern SPI_HandleTypeDef hspi2;
