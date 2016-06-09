@@ -56,3 +56,30 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         HAL_UART_Receive_IT(&huart2, (uint8_t *)&USART2_RX_data, 1);
     }
 }
+
+int transport_sendPacketBuffer(int sock, unsigned char* buf, int buflen)
+{
+    return 0;
+}
+
+int transport_getdata(unsigned char* buf, int count)
+{
+    return 0;
+}
+
+int transport_getdatanb(void *sck, unsigned char* buf, int count)
+{
+    return 0;
+}
+
+int transport_open(char* host, int port)
+{
+    //使用串口TCP透传，打开不受控制。
+    return 0;
+}
+
+int transport_close(int sock)
+{
+    //使用串口TCP透传，关闭不受控制。
+    return 0;
+}

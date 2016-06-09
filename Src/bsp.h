@@ -15,5 +15,10 @@ void Send_To_Console(const char *data, uint32_t len);
 void OLED_Reset(void);
 void OLED_SendCmd(uint8_t cmd);
 void OLED_SendData(uint8_t data);
+int transport_sendPacketBuffer(int sock, unsigned char* buf, int buflen);
+int transport_getdata(unsigned char* buf, int count);
+int transport_getdatanb(void *sck, unsigned char* buf, int count);
+int transport_open(char* host, int port);
+int transport_close(int sock);
 
 #endif

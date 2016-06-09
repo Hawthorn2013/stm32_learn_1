@@ -104,7 +104,7 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     //Send_To_Console(dst, sizeof(dst) - 1);
-    OLED_Print6x8Str("hehehe123\r\n");
+    //OLED_Print6x8Str("hehehe123\r\n");
   }
   /* USER CODE END 3 */
 
