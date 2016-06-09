@@ -34,7 +34,7 @@
 #include "stm32f1xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -94,10 +94,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+      char dst[] = "hehehe123\r\n";
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
+    Send_To_Console(dst, sizeof(dst) - 1);
   }
   /* USER CODE END 3 */
 
