@@ -36,7 +36,7 @@ void Init_STM32(void)
     USART_Cmd(USART1, ENABLE);                    //使能串口
     //USART 初始化设置
     USART_DeInit(USART2);
-    USART_InitStructure.USART_BaudRate = 9600;
+    USART_InitStructure.USART_BaudRate = 57600;
     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
     USART_InitStructure.USART_StopBits = USART_StopBits_1;
     USART_InitStructure.USART_Parity = USART_Parity_No;
