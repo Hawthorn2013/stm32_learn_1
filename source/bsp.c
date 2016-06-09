@@ -1,5 +1,7 @@
 #include "bsp.h"
 
+volatile uint8_t USART2_RX_data;
+
 void Init_STM32(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
@@ -126,12 +128,10 @@ void OLED_SendData(uint8_t data)
 
 void USART2_IRQHandler(void)
 {
-    volatile uint16_t RX_dat;
-
     if(USART_GetITStatus(USART2, USART_IT_RXNE) == SET) //USART_IT_RXNE：接收中断
     {
         USART_ClearITPendingBit(USART2, USART_IT_RXNE);
-        RX_dat = USART_ReceiveData(USART2);
-        (void)RX_dat;
+        USART2_RX_data = USART_ReceiveData(USART2);
+        (void)USART2_RX_data;
     }
 }
